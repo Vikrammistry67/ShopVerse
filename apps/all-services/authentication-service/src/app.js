@@ -10,6 +10,6 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 // url emdpoints --->
-app.use('/api/auth', authRoute);
+app.use('/', authRoute);
 
 export default app;
