@@ -1,0 +1,29 @@
+# 🛒 Product Service API
+
+A scalable backend service for managing products in an e-commerce system using **Node.js, Express, MongoDB, and MVC architecture**.
+
+---
+
+## 📌 Overview
+
+This service handles:
+- Product creation and management
+- Product search and filtering
+- Category-based product organization
+- Seller-linked product system
+
+Built with scalability and modular architecture in mind.
+
+---
+
+## ⚙️ Tech Stack
+
+- Node.js
+- Express.js
+- MongoDB + Mongoose
+- REST API
+- MVC Architecture
+
+---
+
+## 📁 Project Structure
