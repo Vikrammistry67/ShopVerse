@@ -52,6 +52,7 @@ export const registerUser = async (req, res, next) => {
     })
 };
 
+
 export const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -246,5 +247,82 @@ export const getUserAddress = async (req, res, next) => {
 
 
 export const addUserAddress = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { street, city, state, zip, country, isDefault } = req.body;
 
+        const userAddress = await userModel.findOneAndUpdate(
+            { _id: userId },
+            {
+                $push: {
+                    addresses: {
+                        street,
+                        city,
+                        state,
+                        pincode,
+                        country,
+                        isDefault
+                    }
+                }
+            }, { new: true }
+        );
+
+        const user = await userModel.findById({ userId });
+
+        return res.status(201).json({
+            message: 'user address added successfully',
+            user: user
+        })
+    } catch (error) {
+
+    }
+
+};
+
+
+export const getUserAddressById = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const usersAddress = await userModel.findById({ userId });
+        return res.status(200).json({
+            message: 'User addresses details by ID fetched successfully',
+            userAddressDetails: usersAddress
+        });
+    } catch (error) {
+        new Error(`failed to fetch userAddress By ID : ${error}`);
+    }
+};
+
+
+export const deleteUserAddress = async (req, res, next) => {
+    const id = req.user.id;
+    const { addressId } = req.params;
+
+
+    const isAddressExists = await userModel.findOne({ _id: id, 'addresses._id': addressId });
+
+
+    if (!isAddressExists) {
+        return res.status(404).json({ message: "Address not found" });
+    }
+
+    const user = await userModel.findOneAndUpdate({ _id: id }, {
+        $pull: {
+            addresses: { _id: addressId }
+        }
+    }, { new: true });
+
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+
+    const addressExists = user.addresses.some(addr => addr._id.toString() === addressId);
+    if (addressExists) {
+        return res.status(500).json({ message: "Failed to delete address" });
+    }
+
+    return res.status(200).json({
+        message: "Address deleted successfully",
+        addresses: user.addresses
+    });
 };
