@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
 
+const addressSchema = new mongoose.Schema({
+    street: String,
+    city: String,
+    state: String,
+    zip: String,
+    country: String,
+    isDefault: { type: Boolean, default: false }
+});
+
 const userSchema = new mongoose.Schema({
 
     username: {
@@ -48,7 +57,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         enums: ['user', 'seller'],
         default: 'user'
-    }
+    },
+
+    addresses: [
+        addressSchema
+    ]
 
 
 }, { timestamps: true });

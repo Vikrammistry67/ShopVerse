@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import _config from '../config/config.js';
 import _redis from '../config/redis.js';
 import crypto from "crypto";
+import sendEmail from "../utils/sendMail.js";
+
 
 export const registerUser = async (req, res, next) => {
     const { username, fullName, email, password, role } = req.body;
@@ -145,7 +147,7 @@ export const forgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
 
-        const user = await User.findOne({ email });
+        const user = await userModel.findOne({ email });
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -162,12 +164,17 @@ export const forgotPassword = async (req, res) => {
         user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
 
         await user.save();
-
         const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
 
-
-        console.log("Reset URL:", resetUrl);
-
+        await sendEmail(
+            user.email,
+            "Password Reset",
+            `
+                 <h2>Password Reset</h2>
+                 <p>Click below to reset your password:</p>
+                 <a href="${resetUrl}">Reset Password</a>
+  `
+        );
         res.json({ message: "Reset link sent to email" });
     } catch (error) {
         res.status(500).json({ message: "Error" });
@@ -177,7 +184,8 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
     try {
-        const { token } = req.params;
+        const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+        const userId = req.user.id;
         const { password } = req.body;
 
         const hashedToken = crypto
@@ -185,9 +193,11 @@ export const resetPassword = async (req, res) => {
             .update(token)
             .digest("hex");
 
-        const user = await User.findOne({
+        const user = await userModel.findOne({
             resetPasswordToken: hashedToken,
             resetPasswordExpire: { $gt: Date.now() },
+            token,
+            userId
         });
 
         if (!user) {
@@ -204,4 +214,37 @@ export const resetPassword = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error" });
     }
+};
+
+
+export const getUserAddress = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const user = await userModel.findById({ userId })
+            .select("name email")
+            .lean();
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found | not fetched user Address'
+            })
+        } else {
+            return res.status(200).json({
+                message: 'users addresses fetched successfully',
+                user: {
+                    username: user.username,
+                    email: user.email,
+                    role: user.role
+                }
+            })
+        }
+
+    } catch (error) {
+        new Error(`failed to fething user Addresses ${error}`)
+    }
+};
+
+
+export const addUserAddress = async (req, res, next) => {
+
 };
