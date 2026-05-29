@@ -27,3 +27,62 @@ Built with scalability and modular architecture in mind.
 ---
 
 ## 📁 Project Structure
+
+### Get All Products
+
+
+### Get Product by ID
+
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env` file:
+
+
+
+---
+
+## ▶️ Getting Started
+
+### 1. Clone repository
+
+
+### 2. Install dependencies
+
+
+### 3. Run development server
+
+
+---
+
+## 🧠 Architecture Notes
+
+- Follows MVC pattern
+- Separation of concerns (Routes → Controller → Model)
+- Designed for microservice migration in future
+- Schema optimized for indexing and search
+
+---
+
+## 📦 Future Improvements
+
+- Redis caching for product listing
+- Pagination & cursor-based pagination
+- Cloudinary image upload integration
+- Role-based access control (RBAC)
+- Event-driven architecture (Kafka/RabbitMQ)
+
+---
+
+## 👨‍💻 Author
+
+Vikram Mistry  
+Backend Developer (MERN Stack)
+
+---
+
+## 🏁 Status
+
+🚧 In Active Development
