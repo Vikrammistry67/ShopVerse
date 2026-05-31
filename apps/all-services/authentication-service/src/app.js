@@ -1,15 +1,16 @@
-import express from 'express';
-const app = express()
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import authRoute from '../src/routes/auth.route.js';
+import express from "express";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
-//middlewares ---->
-app.use(express.json());
+import authRoute from "./routes/auth.route.js";
+
+const app = express();
+
+app.use(express.json()); // ✅ ONLY HERE
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
-// url emdpoints --->
-app.use('/', authRoute);
+// internal route
+app.use("/auth", authRoute);
 
 export default app;

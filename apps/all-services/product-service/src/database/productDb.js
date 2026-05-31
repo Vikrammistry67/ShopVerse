@@ -4,7 +4,7 @@ import _config from "../config/config.js";
 
 const connectToProductDb = async () => {
     try {
-        await mongoose.connect(_config.JWT_SECRET);
+        await mongoose.connect(_config.MONGO_URI);
         console.log(`product database connected successfully`)
     } catch (error) {
         new Error(`failed to connection product DB : ${error}`);

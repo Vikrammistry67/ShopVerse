@@ -8,6 +8,7 @@ import sendEmail from "../utils/sendMail.js";
 
 
 export const registerUser = async (req, res, next) => {
+    console.log("BODY:", req.body);
     const { username, fullName, email, password, role } = req.body;
     const { firstName, lastName } = fullName;
 

@@ -10,7 +10,7 @@ app.use(morgan('dev'));
 
 
 //  URL - ENDPOINTS ---------->
-app.use('/', productRoute);
+app.use('/products', productRoute);
 
 
 export default app;

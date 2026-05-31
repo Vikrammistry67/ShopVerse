@@ -1,20 +1,19 @@
 import express from "express";
 import morgan from "morgan";
 
-import authRoutes from "./routes/auth.routes.js";
-import productRoutes from "./routes/product.routes.js";
-import userRoutes from "./routes/user.routes.js";
-import paymentRoutes from "./routes/payment.routes.js";
-import aiRoutes from "./routes/ai.routes.js";
+import authProxy from "./routes/users/auth.proxy.js";
+import productsProxy from './routes/Products/product.proxy.js';
+import cartProxy from './routes/Products/cart.proxy.js'
+import orderProxy from './routes/Products/order.proxy.js'
 const app = express();
 
-app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api/auth", authRoutes);
-app.use("/api/product", productRoutes);
-app.use("/api", userRoutes);
-app.use("/api/payment", paymentRoutes);
-app.use("/api/ai", aiRoutes);
+// IMPORTANT — NO express.json() BEFORE PROXY
+
+app.use("/api/auth", authProxy);
+app.use("/api/products", productsProxy);
+app.use('/api/carts', cartProxy);
+app.use('/api/orders', orderProxy)
 
 export default app;

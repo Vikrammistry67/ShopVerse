@@ -1,79 +1,50 @@
 import mongoose from "mongoose";
 
-const variantSchema = new mongoose.Schema(
-    {
-        size: String,
-        color: String,
-        price: Number,
-        stock: Number,
-        sku: String,
+const productSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        index: true // 🔥 for search/filter
     },
-    { _id: false }
-);
-
-const productSchema = new mongoose.Schema(
-    {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
-
-        productName: {
-            type: String,
-            required: true,
-            trim: true,
-            index: true,
-        },
-
-        slug: {
-            type: String,
-            unique: true,
-            index: true,
-        },
-
-        description: {
-            type: String,
-            required: true,
-        },
-
-        price: {
+    description: {
+        type: String,
+    },
+    price: {
+        amount: {
             type: Number,
             required: true,
+            index: true // 🔥 for sorting/filtering
         },
-
-        category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Category",
-            index: true,
-        },
-
-        images: [
-            {
-                url: String,
-            },
-        ],
-
-        variants: [variantSchema],
-
-        stock: {
-            type: Number,
-            default: 0,
-        },
-
-        isActive: {
-            type: Boolean,
-            default: true,
-        },
+        currency: {
+            type: String,
+            enum: ['USD', 'INR'],
+            default: 'INR'
+        }
     },
-    { timestamps: true }
-);
+    seller: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        index: true
+    },
+    images: [
+        {
+            url: String,
+            thumbnail: String,
+            id: String
+        }
+    ],
+    stock: {
+        type: Number,
+        default: 0,
+        index: true
+    }
+}, { timestamps: true });
 
 
+productSchema.index({ title: "text", description: "text" });
 
-/** INDEXES */
-productSchema.index({ productName: "text", description: "text" });
-productSchema.index({ category: 1, price: 1 });
+productSchema.index({ "price.amount": 1, stock: 1 });
 
-
+productSchema.index({ seller: 1, stock: 1 });
 
 export default mongoose.model("Product", productSchema);

@@ -1,14 +1,30 @@
-import productModel from "../models/product.model.js";
-import jwt from 'jsonwebtoken';
-import _config from "../config/config.js";
+import productModel from '../models/product.model.js';
+import { uplaodImage } from '../services/imagekit.service.js'
 
 
-
-export const createProducts = async (req, res, next) => {
+export async function createProduct(req, res) {
     try {
-        const { } = req.body;
-        
-    } catch (error) {
-        new Error(`failed to create products : ${error}`);
-    };
- };
+        const { title, description, priceAmount, priceCurrency = 'INR' } = req.body;
+        const seller = req.user.id; // Extract seller from authenticated user
+
+        const price = {
+            amount: Number(priceAmount),
+            currency: priceCurrency,
+        };
+
+        const images = await Promise.all((req.files || []).map(file => uplaodImage({ buffer: file.buffer })));
+
+
+        const product = await productModel.create({ title, description, price, seller, images });
+
+
+        return res.status(201).json({
+            message: 'Product created',
+            data: product,
+        });
+    } catch (err) {
+        console.error('Create product error', err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
