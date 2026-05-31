@@ -104,6 +104,24 @@ npm run dev
 
 ---
 
+### API Gateway Integration
+
+Implemented an API Gateway to act as a single entry point for all client requests.
+The gateway routes incoming requests to the appropriate microservices, specifically:
+
+- Cart Service → Handles cart operations (add/remove/update items)
+- Order Service → Manages order creation, processing, and history
+
+#### Key Features:
+- Centralized routing and request handling
+- Improved scalability and service decoupling
+- Easier integration of cross-cutting concerns like authentication, logging, and rate limiting
+- Simplified client-side communication (single base URL)
+
+#### Example Routes:
+- /api/cart → Routed to Cart Service
+- /api/orders → Routed to Order Service
+
 ## 👨‍💻 Author
 
 Vikram Mistry  
