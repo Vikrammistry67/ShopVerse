@@ -4,4 +4,4 @@ import connectToCartDB from './src/database/cartDb.js';
 
 connectToCartDB();
 
-app.listen(_config.PORT, () => console.log(`Cart service running at PORT ${_config.PORT}`));
+app.listen(_config.PORT, () => console.log(`Cart service running at PORT ${_config.PORT}`));        
