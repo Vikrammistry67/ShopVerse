@@ -9,7 +9,7 @@ app.use(cookieParser());
 app.use(morgan('dev'))
 
 
-app.use('/carts', cartRoute);
+app.use('/api/carts', cartRoute);
 
 
 export default app;
