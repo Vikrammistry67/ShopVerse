@@ -7,16 +7,15 @@ const router = express.Router();
 router.use(
     "/",
     createProxyMiddleware({
-        target: SERVICES.PRODUCT,
+        target: SERVICES.AUTH, 
         changeOrigin: true,
 
-        // 🔥 FIX — directly prefix /auth
         pathRewrite: (path, req) => {
-            console.log(" Incoming:", path);
+            console.log("👉 Incoming:", path);
 
             const newPath = "/api/auth" + path;
 
-            console.log(" Rewritten:", newPath);
+            console.log("👉 Rewritten:", newPath);
 
             return newPath;
         }
