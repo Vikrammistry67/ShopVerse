@@ -7,6 +7,7 @@ A scalable backend service for managing products in an e-commerce system using N
 ## 📌 Overview
 
 This service handles:
+
 - Product creation and management
 - Product listing and details
 - Category-based filtering
@@ -52,12 +53,15 @@ src/
 ## 🔗 API Endpoints
 
 ### Create Product
+
 POST /api/products
 
 ### Get All Products
+
 GET /api/products
 
 ### Get Product by ID
+
 GET /api/products/:id
 
 ---
@@ -75,12 +79,15 @@ JWT_SECRET=your_secret
 ## ▶️ Getting Started
 
 ### 1. Clone repository
+
 git clone <repo-url>
 
 ### 2. Install dependencies
+
 npm install
 
 ### 3. Run project
+
 npm run dev
 
 ---

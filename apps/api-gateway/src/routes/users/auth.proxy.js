@@ -14,7 +14,7 @@ router.use(
         pathRewrite: (path, req) => {
             console.log(" Incoming:", path);
 
-            const newPath = "/auth" + path;
+            const newPath = "/api/auth" + path;
 
             console.log(" Rewritten:", newPath);
 

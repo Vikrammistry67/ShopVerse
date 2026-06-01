@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-
 import authProxy from "./routes/users/auth.proxy.js";
 import productsProxy from './routes/Products/product.proxy.js';
 import cartProxy from './routes/Products/cart.proxy.js'
