@@ -234,3 +234,74 @@ export async function updateCartItem(req, res) {
 //         console.log('failed')
 //     }
 // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const addItem = async (req, res) => {
+    try {
+        const { productId, qty } = req.body;
+
+        const userId = req.user.id;
+
+        // check user cart is empty or not --->
+        const cart = await cartModel.findOne({ user: userId });
+
+        if (!cart) {
+            cart = new cartModel({ user: userId, items: [] });
+        };
+
+
+        const existingItemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+
+        if (existingItemIndex >= 0) {
+            cart.items[existingItemIndex].quantity += qty;
+        } else {
+            cart.items.push({ productId, quantity: qty })
+        };
+
+
+        await cart.save();
+
+        return res.json({
+            success: true,
+            message: 'added to cart successfully',
+            cart
+        });
+
+
+    } catch (error) {
+        new Error('failed to add item to cart !')
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
