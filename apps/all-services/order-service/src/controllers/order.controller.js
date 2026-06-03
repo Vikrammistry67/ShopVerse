@@ -26,7 +26,7 @@ export const createOrder = async (req, res) => {
             return res.status(400).json({ message: "Cart is empty" });
         }
 
-        // ✅ 2. Fetch products
+        // Fetch products
         const products = await Promise.all(
             cartItems.map(async (item) => {
                 const response = await axios.get(
@@ -41,7 +41,7 @@ export const createOrder = async (req, res) => {
 
         let totalAmount = 0;
 
-        // ✅ 3. Build order items
+        // Build order items
         const orderItems = cartItems.map((item) => {
 
             const product = products.find(
@@ -69,7 +69,7 @@ export const createOrder = async (req, res) => {
             };
         });
 
-        // ✅ 4. Create order
+        // Create order
         const order = await Order.create({
             user: user.id,
             items: orderItems,
@@ -86,7 +86,7 @@ export const createOrder = async (req, res) => {
             }
         });
 
-        // ✅ 5. Clear cart (important)
+        //  Clear cart (important)
         await axios.delete(
             "http://localhost:3002/api/carts/clear",
             {
@@ -108,6 +108,7 @@ export const createOrder = async (req, res) => {
         });
     }
 };
+
 
 
 
