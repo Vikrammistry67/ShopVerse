@@ -42,6 +42,8 @@ export async function getCart(req, res) {
         const cart = await cartModel.findOne({ user: userId });
 
         if (!cart || cart.items.length === 0) {
+            cart = new cartModel({ user: userId, items: [] });
+            await cart.save();
             return res.status(404).json({
                 success: false,
                 message: 'Cart is Empty'
@@ -51,7 +53,11 @@ export async function getCart(req, res) {
 
         return res.status(200).json({
             success: true,
-            cart
+            cart,
+            totals: {
+                itemCount: cart.items.length,
+                totalQuantity: cart.items.reduce((total, item) => total + item.quantity, 0)
+            }
         });
 
     } catch (error) {
@@ -92,6 +98,28 @@ export async function removeFromCart(req, res) {
         new Error(`failed to remove from cart : ${error}`);
     };
 };
+
+export async function getcartById(req, res) {
+    try {
+        const cartId = req.params.id;
+        const cart = await cartModel.findById(cartId);
+
+        if (!cart) {
+            return res.status(404).json({
+                success: false,
+                message: 'Cart not found'
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            cart
+        });
+    } catch (error) {
+        new Error(`failed to get cart by id : ${error}`);
+    };
+}
+
 
 
 export async function clearCart(req, res) {

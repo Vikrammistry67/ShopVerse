@@ -17,8 +17,9 @@ Router.delete('/delete/:id', createAuthMiddleware(['seller']), deleteProduct);
 
 Router.get('/seller/', getProductsBySeller);
 
-Router.get('/getproduct/:id', getProductById);
-Router.get('/getproduct', getProducts);
+Router.get('/:id', getProductById);
+
+Router.get('/', getProducts);
 
 
 export default Router;
