@@ -4,7 +4,7 @@ import { createAuthMiddleware } from '../middlewares/auth.middleware.js';
 const Router = express.Router();
 
 Router.post('/add', createAuthMiddleware(['user']), addtoCart);
-Router.get('/', createAuthMiddleware(['user']), getCart);
+Router.get('/get', createAuthMiddleware(['user']), getCart);
 Router.delete('/remove', createAuthMiddleware(['user']), removeFromCart);
 Router.delete('/clear', createAuthMiddleware(['user']), clearCart);
 Router.put('/update', createAuthMiddleware(['user']), updateCartItem);
