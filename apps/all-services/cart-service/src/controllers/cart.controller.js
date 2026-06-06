@@ -102,6 +102,7 @@ export async function removeFromCart(req, res) {
 export async function getcartById(req, res) {
     try {
         const cartId = req.params.id;
+        const { productId, qty } = req.body;
         const cart = await cartModel.findById(cartId);
 
         if (!cart) {
