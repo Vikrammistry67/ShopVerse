@@ -28,18 +28,20 @@ export async function addtoCart(req, res) {
             message: 'Item added to cart',
             cart,
         });
-
     } catch (error) {
-        new Error(`failed to add to cart : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to add to cart',
+            error: error.message || error
+        });
     };
 };
-
 
 
 export async function getCart(req, res) {
     try {
         const userId = req.user.id;
-        const cart = await cartModel.findOne({ user: userId });
+        let cart = await cartModel.findOne({ user: userId });
 
         if (!cart || cart.items.length === 0) {
             cart = new cartModel({ user: userId, items: [] });
@@ -61,7 +63,11 @@ export async function getCart(req, res) {
         });
 
     } catch (error) {
-        new Error(`failed to get cart : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to get cart',
+            error: error.message || error
+        });
     };
 };
 
@@ -95,9 +101,14 @@ export async function removeFromCart(req, res) {
             cart
         });
     } catch (error) {
-        new Error(`failed to remove from cart : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to remove from cart',
+            error: error.message || error
+        });
     };
 };
+
 
 export async function getcartById(req, res) {
     try {
@@ -117,10 +128,13 @@ export async function getcartById(req, res) {
             cart
         });
     } catch (error) {
-        new Error(`failed to get cart by id : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to get cart by id',
+            error: error.message || error
+        });
     };
 }
-
 
 
 export async function clearCart(req, res) {
@@ -142,7 +156,11 @@ export async function clearCart(req, res) {
         });
     }
     catch (error) {
-        new Error(`failed to clear cart : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to clear cart',
+            error: error.message || error
+        });
     }
 };
 
@@ -173,7 +191,11 @@ export async function updateCartItem(req, res) {
             cart
         });
     } catch (error) {
-        new Error(`failed to update cart item : ${error}`);
+        return res.status(500).json({
+            success: false,
+            message: 'failed to update cart item',
+            error: error.message || error
+        });
     }
 };
 
@@ -277,42 +299,42 @@ export async function updateCartItem(req, res) {
 
 
 
-export const addItem = async (req, res) => {
-    try {
-        const { productId, qty } = req.body;
+// export const addItem = async (req, res) => {
+//     try {
+//         const { productId, qty } = req.body;
 
-        const userId = req.user.id;
+//         const userId = req.user.id;
 
-        // check user cart is empty or not --->
-        const cart = await cartModel.findOne({ user: userId });
+//         // check user cart is empty or not --->
+//         const cart = await cartModel.findOne({ user: userId });
 
-        if (!cart) {
-            cart = new cartModel({ user: userId, items: [] });
-        };
-
-
-        const existingItemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
-
-        if (existingItemIndex >= 0) {
-            cart.items[existingItemIndex].quantity += qty;
-        } else {
-            cart.items.push({ productId, quantity: qty })
-        };
+//         if (!cart) {
+//             cart = new cartModel({ user: userId, items: [] });
+//         };
 
 
-        await cart.save();
+//         const existingItemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
 
-        return res.json({
-            success: true,
-            message: 'added to cart successfully',
-            cart
-        });
+//         if (existingItemIndex >= 0) {
+//             cart.items[existingItemIndex].quantity += qty;
+//         } else {
+//             cart.items.push({ productId, quantity: qty })
+//         };
 
 
-    } catch (error) {
-        new Error('failed to add item to cart !')
-    }
-};
+//         await cart.save();
+
+//         return res.json({
+//             success: true,
+//             message: 'added to cart successfully',
+//             cart
+//         });
+
+
+//     } catch (error) {
+//         new Error('failed to add item to cart !')
+//     }
+// };
 
 
 

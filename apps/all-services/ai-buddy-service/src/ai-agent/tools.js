@@ -5,57 +5,50 @@ import z from 'zod';
 
 // search product Tool
 export const searchProduct = tool(async ({ query, token }) => {
-
-    try {
-        const productResponse = await axios.get(`http://localhost:3001/api/products/${query}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        });
-
-        return JSON.stringify(productResponse.data);
-    } catch (error) {
-        console.log(`TOOL ERROR : ${error}`);
-        new Error('failed to search product by tool');
-    };
-},
-    {
-        name: 'searchProduct',
-        description: 'Search for products based on query',
-        schema: z.object(
-            {
-                query:
-                    z.string()
-                        .describe('the search query for products')
-            },
-        ),
+    console.log("searchProduct called with data:", { query, token })
+    const productResponse = await axios.get(`http://localhost:3001/api/products?q=${query}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
     });
+
+    return JSON.stringify(productResponse.data);
+
+}, {
+    name: 'searchProduct',
+    description: 'Search for products based on query',
+    schema: z.object({
+        query: z.string().describe("The search query for products")
+    })
+});
 
 
 // add to cart product Tool
 export const addProductToCart = tool(async ({ productId, token, qty = 1 }) => {
-    const cartResponse = await axios.get(`http://localhost:3002/api/carts/add`,
-        {
+    try {
+        const response = await axios.post(`http://localhost:3002/api/carts/add`, {
             productId,
             qty
-        },
-        {
-            headers:
-            {
+        }, {
+            headers: {
                 Authorization: `Bearer ${token}`
-            },
-        }
-    );
-
-    return JSON.stringify(cartResponse.data);
-},
-
-    {
-        name: 'addProductToCart',
-        description: 'Add a product to cart by product id and quantity',
-        schema: z.object({
-            productId: z.string().describe('the id of the product to be added to cart'),
-            qty: z.number().describe('the quantity of the product to be added to cart').default(1)
+            }
         })
-    });
 
+        return response.data?.message || `Added product with id ${productId} (qty: ${qty}) to cart`;
+    } catch (error) {
+        console.error('addProductToCart failed:', error?.response?.data || error.message || error);
+        throw new Error(`Failed to add product to cart: ${error?.response?.data?.message || error.message || error}`);
+    }
+
+}, {
+    name: "addProductToCart",
+    description: "Add a product to the shopping cart",
+    schema: z.object({
+        productId: z.string().describe("The id of the product to add to the cart"),
+        qty: z.number().describe("The quantity of the product to add to the cart").default(1),
+    })
+})
+
+
+export default { searchProduct, addProductToCart }

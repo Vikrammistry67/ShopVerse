@@ -30,7 +30,11 @@ export function createAuthMiddleware(roles = ['user']) {
             req.user = decoded;
             next();
         } catch (error) {
-            new Error(`Unauthorized User : ${error}`);
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized User',
+                error: error.message || error
+            });
         };
 
     };
