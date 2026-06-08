@@ -2,7 +2,9 @@ import paymentModel from "../models/payment.model.js";
 import axios from 'axios';
 import Razorpay from 'razorpay'
 import _config from "../config/config.js";
+import { publishToQueue } from '../broker/broker.js';
 import { validatePaymentVerification } from '../../node_modules/razorpay/dist/utils/razorpay-utils.js';
+
 
 // razorPay - setup -->
 const _razorpay = new Razorpay({
@@ -45,6 +47,14 @@ export const createPayment = async (req, res) => {
             },
         });
 
+        await publishToQueue('PAYMENT_NOTIFICATION.PAYMENT_INITIATED', {
+            email: req.user.email,
+            orderId: orderId,
+            amount: payment.price.amount / 100,
+            currency: payment.price.currency,
+            username: req.user.username,
+
+        });
         console.log('payment : ', payment);
 
         return res.status(201).json({
@@ -96,6 +106,17 @@ export const verifyPayment = async (req, res) => {
 
 
         await payment.save();
+
+        await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_COMPLETED",
+            {
+                email: req.user.email,
+                orderId: payment.order,
+                paymentId: payment.paymentId,
+                amount: payment.price.amount / 100,
+                currency: payment.price.currency,
+                fullName: req.user.fullName
+            }
+        )
         await axios.put('http://localhost:3003/api/orders/' + payment.order, {
             status: 'COMPLETED'
         });
@@ -107,6 +128,14 @@ export const verifyPayment = async (req, res) => {
         });
 
     } catch (error) {
+        await publishToQueue("PAYMENT_NOTIFICATION.PAYMENT_FAILED",
+            {
+                email: req.user.email,
+                paymentId: paymentId,
+                orderId: razorpayOrderId,
+                fullName: req.user.fullName
+            }
+        )
         console.log(`ERROR : ${error}`)
         res.status(500).json({
             success: false,

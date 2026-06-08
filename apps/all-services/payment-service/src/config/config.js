@@ -11,8 +11,8 @@ const _config = {
 
     // RazorPay --> 
     RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
-    RAZORPAY_SECRET_ID: process.env.RAZORPAY_SECRET_ID
-
+    RAZORPAY_SECRET_ID: process.env.RAZORPAY_SECRET_ID,
+    RABBITMQ_URL: process.env.RABBITMQ_URL
 };
 
 

@@ -12,7 +12,8 @@ const _config = {
     REDIS_USERNAME: process.env.REDIS_USERNAME,
 
     EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    RABBITMQ_URL : process.env.RABBITMQ_URL
 };
 
 

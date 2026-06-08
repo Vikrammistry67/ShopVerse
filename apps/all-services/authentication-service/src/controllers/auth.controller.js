@@ -5,7 +5,7 @@ import _config from '../config/config.js';
 import _redis from '../config/redis.js';
 import crypto from "crypto";
 import sendEmail from "../utils/sendMail.js";
-
+import { publishToQueue } from '../brokerService/broker.service.js';
 
 export const registerUser = async (req, res, next) => {
     console.log("BODY:", req.body);
@@ -33,6 +33,14 @@ export const registerUser = async (req, res, next) => {
         password: hashPassword
     });
 
+    // set-up publish Queue
+    await publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        fullName: user.fullName,
+    });
+
     const token = jwt.sign({
         id: user._id,
         role: user.role,
@@ -40,6 +48,7 @@ export const registerUser = async (req, res, next) => {
     }, _config.JWT_SECRET, {
         expiresIn: '1d'
     });
+
 
     res.cookie('token', token, {
         httpOnly: true,
