@@ -1,24 +1,23 @@
 import express from 'express';
-import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import paymentRoute from './routes/payment.routes.js';
+import morgan from 'morgan';
+import sellerRoute from './routes/sellerdashboard.routes.js';
 const app = express();
 
+// required middlewares --->
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cookieParser());
-
 
 // health Route -->
 app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
-        message: 'Payment Service is up and  running'
+        message: 'Seller dashboard is up and  running'
     });
 });
 
 
-app.use('/api/payments', paymentRoute);
-
-
+// URL - endoints -->
+app.use('/seller/dashboard', sellerRoute);
 export default app;

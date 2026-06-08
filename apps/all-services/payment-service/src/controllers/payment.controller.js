@@ -55,6 +55,7 @@ export const createPayment = async (req, res) => {
             username: req.user.username,
 
         });
+        await publishToQueue('PAYMENT_SELLER_DASHBOARD.PAYMENT_CREATED', payment);
         console.log('payment : ', payment);
 
         return res.status(201).json({

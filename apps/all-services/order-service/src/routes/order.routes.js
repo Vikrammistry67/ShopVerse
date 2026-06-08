@@ -1,12 +1,11 @@
 import express from 'express';
 import { createAuthMiddleware } from '../middlewares/auth.middleware.js';
 import { cancelOrderById, createOrder, getMyOrder, getOrderById, updateShippingAddress } from '../controllers/order.controller.js';
-import { createOrderValidation } from '../validator/order.validation.js';
 const Router = express.Router();
 
 
 // Routes --> 
-Router.post('/create', createAuthMiddleware(['user']), createOrderValidation, createOrder);
+Router.post('/create', createAuthMiddleware(['user']),  createOrder);
 
 
 // get My Order -->

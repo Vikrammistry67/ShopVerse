@@ -33,13 +33,21 @@ export const registerUser = async (req, res, next) => {
         password: hashPassword
     });
 
+
+    // optimized way --> 
+    await Promise.all([
+        publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            fullName: user.fullName,
+        }),
+
+        publishToQueue('AUTH_SELLER_DASHBOARD.USER_CREATED', user),
+
+    ])
     // set-up publish Queue
-    await publishToQueue('AUTH_NOTIFICATION.USER_CREATED', {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        fullName: user.fullName,
-    });
+
 
     const token = jwt.sign({
         id: user._id,

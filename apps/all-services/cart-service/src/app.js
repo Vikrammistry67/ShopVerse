@@ -8,6 +8,13 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'))
 
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Cart Service is up and  running'
+    });
+});
+
 
 app.use('/api/carts', cartRoute);
 

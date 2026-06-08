@@ -24,11 +24,7 @@ export const createOrderValidation = (req, res, next) => {
                 .required()
                 .warning('State is required and must be between 2 and 50 characters'),
 
-            pincode: Joi.string()
-                .pattern(/^[0-9]{6}$/)
-                .required()
-                .warning('Pincode is required and must be a 6-digit number'),
-
+            
             country: Joi.string()
                 .trim()
                 .min(2)

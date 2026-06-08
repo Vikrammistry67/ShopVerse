@@ -1,15 +1,12 @@
-import dotenvConfig from 'dotenv';
+import dotenv from 'dotenv';
 
-dotenvConfig.config();
-
+dotenv.config();
 
 const _config = {
-
     PORT: process.env.PORT,
-    JWT_SECRET: process.env.JWT_SECRET,
     MONGO_URI: process.env.MONGO_URI,
+    JWT_SECRET: process.env.JWT_SECRET,
     RABBITMQ_URL: process.env.RABBITMQ_URL
-
 };
 
 

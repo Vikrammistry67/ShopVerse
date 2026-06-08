@@ -9,6 +9,15 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 
 
+// health Route -->
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Product Service is up and  running'
+    });
+});
+
+
 //  URL - ENDPOINTS ---------->
 app.use('/api/products', productRoute);
 

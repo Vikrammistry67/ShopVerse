@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 import productModel from '../models/product.model.js';
 import { uplaodImage } from '../services/imagekit.service.js'
+import { publishToQueue } from '../broker/broker.js';
 
 
 export async function createProduct(req, res) {
     try {
         const { title, description, priceAmount, priceCurrency = 'INR' } = req.body;
         const seller = req.user.id; // Extract seller from authenticated user
-
+        console.log(req.user);
         const price = {
             amount: Number(priceAmount),
             currency: priceCurrency,
@@ -18,6 +19,13 @@ export async function createProduct(req, res) {
 
         const product = await productModel.create({ title, description, price, seller, images });
 
+
+        await publishToQueue("PRODUCT_SELLER_DASHBOARD.PRODUCT_CREATED", product);
+        await publishToQueue("PRODUCT_NOTIFICATION.PRODUCT_CREATED", {
+            email: req.user.email,
+            productId: product._id,
+            sellerId: seller
+        });
 
         return res.status(201).json({
             message: 'Product created',

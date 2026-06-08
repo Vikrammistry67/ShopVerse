@@ -8,6 +8,14 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cookieParser());
 
+// health Route -->
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Order Service is up and  running'
+    });
+});
+
 
 // END POINT 
 app.use('/api/orders', orderRoute);

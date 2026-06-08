@@ -1,8 +1,7 @@
 import axios from "axios";
 import Order from "../models/order.model.js";
 import orderModel from "../models/order.model.js";
-
-
+import { publishToQueue } from '../broker/broker.js';
 
 export const createOrder = async (req, res) => {
     try {
@@ -94,6 +93,7 @@ export const createOrder = async (req, res) => {
             }
         });
 
+        await publishToQueue('ORDER_SELLER_DASHBOARD.ORDER_CREATED', order);
         await axios.delete(
             "http://localhost:3002/api/carts/clear",
             {

@@ -2,9 +2,12 @@ import express from 'express';
 const app = express();
 
 
-// health - route --->
 app.get('/', (req, res) => {
-    res.send(`Notification service is up and running`);
+    res.status(200).json({
+        success: true,
+        message: 'Notification Service is up and  running'
+    });
 });
+
 
 export default app;

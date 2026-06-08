@@ -9,13 +9,22 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 
-// 🔥 Debug (OPTIONAL but useful)
+//Debug
 app.use((req, res, next) => {
-    console.log("🔥 AUTH SERVICE HIT:", req.method, req.url);
+    console.log("AUTH SERVICE HIT:", req.method, req.url);
     next();
 });
 
-// ✅ IMPORTANT (FINAL ROUTE PREFIX)
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Authentication Service is up and  running'
+    });
+});
+
+
+//  IMPORTANT (FINAL ROUTE PREFIX)
 app.use("/api/auth", authRoute);
 
 export default app;
